@@ -5,6 +5,18 @@ var ECPubKey = require('../').ECPubKey
 var Message = require('../').Message
 
 describe('ecdsa', function() {
+  // FIXME: needs much better tests than this
+  describe('deterministicGenerateK', function() {
+    it('produces deterministic K values', function() {
+      var secret = [4]
+
+      var k1 = ecdsa.deterministicGenerateK([1], secret)
+      var k2 = ecdsa.deterministicGenerateK([2], secret)
+
+      assert.notDeepEqual(k1, k2)
+    })
+  })
+
   describe('recoverPubKey', function() {
     it('succesfully recovers a public key', function() {
       var addr = 'mgQK8S6CfSXKjPmnujArSmVxafeJfrZsa3'
@@ -13,6 +25,7 @@ describe('ecdsa', function() {
       var pubKey = new ECPubKey(ecdsa.recoverPubKey(obj.r, obj.s, Message.magicHash('1111'), obj.i))
 
       assert.equal(pubKey.toHex(true), '02e8fcf4d749b35879bc1f3b14b49e67ab7301da3558c5a9b74a54f1e6339c334c')
+
     })
   })
 })
